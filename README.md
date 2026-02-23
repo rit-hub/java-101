@@ -217,21 +217,82 @@ A massive topic for junior-level interviews.
 ---
 
 ## 10. Modern Java Features (Java 8 to 21)
-Modern paradigms that shifted how Java is written.
 
-**Java 8:**
-* **Lambdas:** `(a, b) -> a + b` (Functional programming).
-* **Streams API:** Declarative data processing (`list.stream().filter(x -> x > 10).map(String::valueOf).toList();`).
-* **Optional:** Avoids `NullPointerException`.
-* **CompletableFuture:** Asynchronous, non-blocking task chains.
+For developers with 0–3 years of experience, **Java 8** is the most tested area in interviews. You must be comfortable writing declarative code using Lambdas and Streams. Features from Java 9+ are usually just theoretical trivia at this level.
 
-**Java 9 - 17:**
-* **Modules (JPMS):** `module-info.java` for stronger encapsulation.
-* **`var` (Java 10):** Local variable type inference.
-* **Text Blocks (Java 15):** Multi-line strings using `"""`.
-* **Records (Java 16):** Immutable data carriers (`public record User(String name, int age) {}`).
-* **Sealed Classes (Java 17):** Restricts which classes can extend them.
+### 1. Java 8: The Functional Revolution
 
-**Java 21:**
-* **Pattern Matching for `switch`:** Switching over object types natively.
-* **Virtual Threads:** Lightweight threads managed by the JVM (Project Loom), allowing millions of concurrent threads without OS overhead.
+#### A. Functional Interfaces & Lambdas
+* **Functional Interface:** An interface with exactly **one abstract method** (SAM - Single Abstract Method). It can have multiple `default` or `static` methods. Annotated with `@FunctionalInterface`.
+* **Lambda Expressions:** A concise way to implement the single method of a functional interface. Syntax: `(parameters) -> expression` or `(parameters) -> { statements; }`.
+* **The "Big 4" Built-in Functional Interfaces (Crucial for Interviews):**
+    1. **`Predicate<T>`:** Takes an input `T`, returns a `boolean`. (Used for filtering). *Method: `test(T t)`*
+    2. **`Function<T, R>`:** Takes an input `T`, returns a result `R`. (Used for mapping/transforming). *Method: `apply(T t)`*
+    3. **`Consumer<T>`:** Takes an input `T`, returns nothing `void`. (Used for printing/saving). *Method: `accept(T t)`*
+    4. **`Supplier<T>`:** Takes no input, returns a result `T`. (Used for generating/providing values). *Method: `get()`*
+
+#### B. The Streams API
+A Stream is a sequence of elements supporting sequential and parallel aggregate operations. **Streams do not store data; they process it.**
+
+
+
+**Key Interview Rule:** A Stream pipeline consists of a source, zero or more *Intermediate Operations*, and exactly one *Terminal Operation*. **Streams are lazy:** Intermediate operations are NOT executed until a terminal operation is invoked.
+
+**Popular Intermediate Operations (Return a new Stream, Lazy):**
+* `filter(Predicate)`: Keeps elements that match the condition.
+* `map(Function)`: Transforms each element into another object (e.g., extracting names from a list of Users).
+* `flatMap(Function)`: Flattens nested structures (e.g., converting `List<List<String>>` into `List<String>`).
+* `sorted()` / `sorted(Comparator)`: Sorts the stream naturally or by a custom comparator.
+* `distinct()`: Removes duplicate elements (relies on `equals()` and `hashCode()`).
+* `limit(n)`: Truncates the stream to the first `n` elements.
+
+**Popular Terminal Operations (Produce a result, Eager):**
+* `collect(Collector)`: Gathers elements into a Collection (e.g., `Collectors.toList()`, `Collectors.groupingBy()`).
+* `forEach(Consumer)`: Performs an action for each element.
+* `reduce(BinaryOperator)`: Combines all elements into a single value (e.g., summing numbers).
+* `count()`: Returns the number of elements in the stream.
+* `findFirst()` / `findAny()`: Returns an `Optional` containing the first/any element.
+* `anyMatch(Predicate)` / `allMatch(Predicate)`: Returns a boolean based on conditions.
+
+**Interview Example Code:** "Given a list of employees, return a comma-separated string of the names of employees older than 30."
+```java
+String names = employees.stream()
+    .filter(e -> e.getAge() > 30)          // Intermediate: keep > 30
+    .map(Employee::getName)                // Intermediate: Employee -> String (Method Reference)
+    .collect(Collectors.joining(", "));    // Terminal: Join into a single String
+```
+
+#### C. `Optional<T>`
+Introduced to prevent the dreaded `NullPointerException` (NPE). It acts as a container object which may or may not contain a non-null value.
+* **Creation:** `Optional.of(value)` (throws NPE if null), `Optional.ofNullable(value)` (safe), `Optional.empty()`.
+* **Usage:** * `isPresent()`: Returns true if a value exists.
+    * `ifPresent(Consumer)`: Executes the consumer only if the value exists.
+    * `orElse(defaultValue)`: Returns the value if present, otherwise returns the default.
+    * `orElseThrow(Supplier)`: Throws a custom exception if the value is missing.
+
+---
+
+### 2. Java 9 to 17 (The Consolidation Era)
+
+* **`var` (Java 10):** Local-Variable Type Inference. The compiler figures out the type based on the assigned value. (e.g., `var list = new ArrayList<String>();`). *Note: Only for local variables inside methods, not class fields.*
+* **Text Blocks (Java 15):** Multi-line string literals using `"""`. Great for writing inline JSON, HTML, or SQL without ugly concatenation and escape characters.
+* **Records (Java 16):** A massive boilerplate killer. A compact syntax to declare immutable data-carrier classes. It automatically generates a constructor, getters, `equals()`, `hashCode()`, and `toString()`.
+    ```java
+    // This one line replaces 50 lines of boilerplate POJO code
+    public record User(String name, int age) {} 
+    ```
+* **Sealed Classes (Java 17):** Allows a class or interface to strictly define which other classes are permitted to extend or implement it using the `sealed` and `permits` keywords.
+
+---
+
+### 3. Java 21 (The Modern Era)
+
+* **Pattern Matching for `switch`:** You can now pass objects into a `switch` statement and branch based on their exact type, binding the variable automatically.
+    ```java
+    return switch (obj) {
+        case Integer i -> String.format("int %d", i);
+        case String s  -> String.format("String %s", s);
+        default        -> obj.toString();
+    };
+    ```
+* **Virtual Threads (Project Loom):** Traditional threads are mapped 1:1 to OS threads (which are heavy and limited). Virtual threads are lightweight, managed entirely by the JVM. You can spin up millions of them concurrently without crashing the OS or needing complex asynchronous code.
