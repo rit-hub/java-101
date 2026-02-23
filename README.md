@@ -60,8 +60,12 @@ try {
     // Always executes (used to close resources)
 }
 ```
+
 * **Checked vs. Unchecked:** Checked exceptions (e.g., `IOException`) are checked at compile-time. Unchecked exceptions (`RuntimeException`, e.g., `NullPointerException`) happen at runtime.
 * **Try-With-Resources (Java 7+):** Automatically closes resources that implement `AutoCloseable`.
+* **`throw` vs. `throws`:**
+    * **`throw`:** Used *inside* a method body to explicitly throw a single exception instance (e.g., `throw new IllegalArgumentException("Invalid input");`).
+    * **`throws`:** Used in a method *signature* to declare that the method might throw one or more exceptions, passing the responsibility of handling them to the caller (e.g., `public void readFile() throws IOException { ... }`).
 
 ---
 
