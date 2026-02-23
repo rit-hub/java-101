@@ -1,11 +1,11 @@
-# Core Java Cheat Sheet
+# Complete Core Java Cheat Sheet (Basic to Advanced)
 
-## 1. Java Program Structure
-Every Java application begins with a class definition and a `main` method. 
+## 1. Java Program Structure & Execution
+Java code is compiled into bytecode (`.class`) by the compiler (`javac`) and executed by the Java Virtual Machine (JVM).
 
 ```java
 public class HelloWorld {
-    // Execution starts here
+    // Execution starting point
     public static void main(String[] args) {
         System.out.println("Hello, World!");
     }
@@ -14,129 +14,139 @@ public class HelloWorld {
 
 ---
 
-## 2. Data Types
-Java is strictly typed. Data types are split into Primitives (stored directly in memory) and Non-Primitives (references to objects).
+## 2. Data Types & String Manipulation
+Java is strongly typed. 
 
-| Category | Type | Size | Description/Range |
-| :--- | :--- | :--- | :--- |
-| **Primitive** | `byte` | 8-bit | -128 to 127 |
-| | `short` | 16-bit | -32,768 to 32,767 |
-| | `int` | 32-bit | Default for whole numbers |
-| | `long` | 64-bit | Append 'L' (e.g., `100L`) |
-| | `float` | 32-bit | Append 'f' (e.g., `10.5f`) |
-| | `double` | 64-bit | Default for decimal numbers |
-| | `char` | 16-bit | Single Unicode character (e.g., `'A'`) |
-| | `boolean` | 1-bit | `true` or `false` |
-| **Non-Primitive** | `String` | Varies | Sequence of characters (Immutable) |
-| | `Arrays` | Varies | Fixed-size collection of similar types |
-| | `Classes/Objects`| Varies | User-defined blueprints and instances |
+**Primitives:** `byte` (8-bit), `short` (16-bit), `int` (32-bit), `long` (64-bit), `float` (32-bit), `double` (64-bit), `char` (16-bit Unicode), `boolean` (1-bit).
+
+**String Handling:**
+Strings are immutable in Java. For concatenation or manipulation in loops, use mutable alternatives.
+* **`String`:** Stored in the String Constant Pool (Heap). Reusing literals saves memory.
+* **`StringBuilder`:** Mutable, fast, but **not** thread-safe.
+* **`StringBuffer`:** Mutable and thread-safe (synchronized).
+
+
 
 ---
 
-## 3. Operators & Control Flow
+## 3. Object-Oriented Programming (OOP)
+Java revolves around objects.
 
-**Key Operators:**
-* **Arithmetic:** `+`, `-`, `*`, `/`, `%`
-* **Logical:** `&&` (AND), `||` (OR), `!` (NOT)
-* **Relational:** `==`, `!=`, `>`, `<`, `>=`, `<=`
-* **Ternary:** `condition ? ifTrue : ifFalse`
+**The 4 Pillars:**
+1. **Encapsulation:** Wrapping data (variables) and code acting on data (methods) together. Using `private` fields with `public` getters/setters.
+2. **Inheritance:** `extends` (Classes) or `implements` (Interfaces) to reuse code. Java supports single inheritance for classes, multiple for interfaces.
+3. **Polymorphism:** * *Compile-time:* Method Overloading (same name, different parameters).
+    * *Run-time:* Method Overriding (subclass provides specific implementation of superclass method).
+4. **Abstraction:** Hiding implementation details via `abstract` classes or `interface`s.
 
-**Control Statements:**
-* **`if-else`:** Executes a block if a condition is true.
-* **`switch`:** Tests a variable against multiple cases (supports Strings, Enums, and pattern matching in Java 21+).
-* **`for` loop:** Used when the number of iterations is known.
-* **`while` loop:** Runs as long as a condition is true.
-* **`do-while` loop:** Executes the block at least once before checking the condition.
-
----
-
-## 4. Object-Oriented Programming (OOP)
-Java is fundamentally built on objects and classes. 
-
-**The 4 Pillars of OOP:**
-* **Encapsulation:** Hiding internal state and requiring all interaction to be performed through an object's methods (using `private` fields and `public` getters/setters).
-* **Inheritance:** Acquiring properties of another class using the `extends` keyword to promote code reusability.
-* **Polymorphism:** The ability of a single action to behave differently. Achieved via **Compile-time** (Method Overloading) and **Run-time** (Method Overriding).
-* **Abstraction:** Hiding complex implementation details and showing only the essential features using `abstract` classes or `interface` types.
-
-**Access Modifiers:**
-* **`private`:** Accessible only within the same class.
-* **`default` (no keyword):** Accessible within the same package.
-* **`protected`:** Accessible within the same package and subclasses.
-* **`public`:** Accessible from anywhere.
+**Advanced OOP Constructs:**
+* **Enums:** Special classes representing a group of constants. Can have fields, methods, and constructors.
+* **Annotations:** Metadata tags (e.g., `@Override`, `@FunctionalInterface`, `@Deprecated`) used by the compiler or at runtime via Reflection.
 
 ---
 
-## 5. Exception Handling
-Exceptions disrupt the normal flow of the program. Java uses a robust system to catch and handle them.
+## 4. Exception Handling
+Handling runtime disruptions gracefully.
 
 ```java
 try {
-    // Code that may throw an exception
-    int result = 10 / 0;
-} catch (ArithmeticException e) {
-    // Block to handle the specific exception
-    System.out.println("Cannot divide by zero.");
+    // Risky code
+} catch (SpecificException e) {
+    // Handle specific
+} catch (Exception e) {
+    // Handle generic
 } finally {
-    // Executes regardless of whether an exception occurred
-    System.out.println("Cleanup operations go here.");
+    // Always executes (used to close resources)
 }
 ```
-**Important Keywords:**
-* **`throw`:** Used to explicitly throw an exception.
-* **`throws`:** Used in a method signature to declare that it might throw an exception.
+* **Checked vs. Unchecked:** Checked exceptions (e.g., `IOException`) are checked at compile-time. Unchecked exceptions (`RuntimeException`, e.g., `NullPointerException`) happen at runtime.
+* **Try-With-Resources (Java 7+):** Automatically closes resources that implement `AutoCloseable`.
 
 ---
 
-## 6. Collections Framework
-The Collections framework provides an architecture to store and manipulate groups of objects. 
+## 5. Collections Framework & Generics
+A unified architecture for storing and manipulating groups of objects.
 
 
 
 | Interface | Implementations | Key Characteristics |
 | :--- | :--- | :--- |
-| **List** | `ArrayList`, `LinkedList` | Ordered collection, allows duplicate elements. |
-| **Set** | `HashSet`, `TreeSet` | Unordered collection, does not allow duplicates. |
-| **Map** | `HashMap`, `TreeMap` | Stores Key-Value pairs, keys must be unique. |
-| **Queue** | `PriorityQueue`, `ArrayDeque`| Follows FIFO (First-In-First-Out) principle. |
+| **List** | `ArrayList`, `LinkedList` | Ordered, allows duplicates. `ArrayList` is fast for reads; `LinkedList` for inserts/deletes. |
+| **Set** | `HashSet`, `TreeSet` | Unordered, no duplicates. `TreeSet` keeps elements sorted. |
+| **Map** | `HashMap`, `TreeMap` | Key-Value pairs. `HashMap` is fast (O(1)); `TreeMap` is sorted by keys. |
+
+**Generics (`<T>`):**
+Provides compile-time type safety and eliminates the need for casting.
+* **Wildcards:** `?` (Unknown), `? extends T` (Upper bound - read-only), `? super T` (Lower bound - write-only).
+* **Type Erasure:** Generics are removed by the compiler; the JVM only sees `Object`.
 
 ---
 
-## 7. Memory Management & JVM
-Java handles memory automatically, primarily dividing it into two main areas.
+## 6. JVM Architecture & Memory Management
+Understanding what happens under the hood.
 
 
 
-* **Heap:** Where all objects and their instance variables are allocated. This is the area managed by the Garbage Collector (GC).
-* **Stack:** Where method executions and local variables are stored. Each thread has its own stack.
-* **Garbage Collection:** An automatic process that reclaims memory by deleting unreachable objects (e.g., G1 GC, ZGC).
+* **ClassLoaders:** Load `.class` files into memory (Bootstrap -> Platform -> Application).
+* **Heap:** Where objects live. Managed by the Garbage Collector (GC).
+* **Stack:** Where local variables and method calls are stored. Each thread gets its own Stack.
+* **Garbage Collection (GC):** Automatically reclaims memory by deleting unreachable objects (e.g., G1 GC, ZGC).
+
+
 
 ---
 
-## 8. Modern Java Features (Java 8 to Java 21)
-Java has evolved significantly to become more concise and powerful. 
+## 7. The Java Memory Model (JMM)
+Crucial for understanding how threads interact with memory.
+
+
+
+* **`volatile` Keyword:** Forces threads to read the variable's value directly from main memory, bypassing the CPU cache. Guarantees visibility across threads.
+* **`transient` Keyword:** Excludes a variable from being serialized.
+* **Happens-Before:** The JMM guarantee that if action A happens-before action B, A's results are visible to B.
+
+---
+
+## 8. Multithreading & Concurrency
+Moving from basic threads to advanced synchronization.
+
+**Basics:**
+* Implementing `Runnable` or extending `Thread`.
+* `synchronized` blocks/methods to prevent race conditions.
+
+**Advanced (`java.util.concurrent`):**
+* **ExecutorService:** Thread pool management (e.g., `Executors.newFixedThreadPool(10)`).
+* **Callable & Future:** Like `Runnable`, but returns a result or throws an exception.
+* **Locks:** `ReentrantLock`, `ReadWriteLock` for finer control than `synchronized`.
+* **Synchronizers:** `CountDownLatch`, `CyclicBarrier` for orchestrating multiple threads.
+* **Concurrent Collections:** `ConcurrentHashMap` (lock stripping for high throughput), `CopyOnWriteArrayList`.
+* **Atomic Variables:** `AtomicInteger` (uses lock-free CAS - Compare-And-Swap operations).
+
+---
+
+## 9. File I/O, NIO & Serialization
+* **`java.io`:** Stream-based, blocking I/O (`FileInputStream`, `BufferedReader`).
+* **`java.nio` (New I/O):** Channel and Buffer-based, non-blocking. Better for high-performance server applications.
+* **Serialization:** Converting an object to a byte stream (`implements Serializable`). `serialVersionUID` is crucial for version control during deserialization.
+
+---
+
+## 10. Modern Java Features (Java 8 to 21)
+Modern paradigms that shifted how Java is written.
 
 **Java 8:**
-* **Lambda Expressions:** `(a, b) -> a + b` provides a clear and concise way to represent a method interface using an expression.
-* **Streams API:** Allows functional-style operations on collections. Example: `list.stream().filter(x -> x > 10).collect(Collectors.toList());`
-* **Optional:** A container object used to avoid `NullPointerException`.
+* **Lambdas:** `(a, b) -> a + b` (Functional programming).
+* **Streams API:** Declarative data processing (`list.stream().filter(x -> x > 10).map(String::valueOf).toList();`).
+* **Optional:** Avoids `NullPointerException`.
+* **CompletableFuture:** Asynchronous, non-blocking task chains.
 
-**Java 11 - 16:**
-* **`var` Keyword:** Local variable type inference (Java 10/11).
-* **Text Blocks:** Multi-line string literals using `"""` (Java 15).
-* **Records:** A concise syntax to create immutable data carrier classes (Java 16). 
-    * *Example:* `public record User(String name, int age) {}`
+**Java 9 - 17:**
+* **Modules (JPMS):** `module-info.java` for stronger encapsulation.
+* **`var` (Java 10):** Local variable type inference.
+* **Text Blocks (Java 15):** Multi-line strings using `"""`.
+* **Records (Java 16):** Immutable data carriers (`public record User(String name, int age) {}`).
+* **Sealed Classes (Java 17):** Restricts which classes can extend them.
 
-**Java 17 - 21:**
-* **Sealed Classes:** Restricts which other classes or interfaces may extend or implement them (Java 17).
-* **Pattern Matching for `switch`:** Simplifies complex conditional logic based on object types (Java 21).
-* **Virtual Threads:** Lightweight threads that dramatically reduce the effort of writing, maintaining, and observing high-throughput concurrent applications (Java 21).
-
----
-
-## 9. Multithreading & Concurrency
-Java supports concurrent execution out of the box, allowing multiple tasks to run simultaneously.
-
-* **Creating a Thread:** Implement the `Runnable` interface or extend the `Thread` class.
-* **ExecutorService:** A higher-level replacement for working with threads directly, managing a pool of worker threads.
-* **Synchronization:** Using the `synchronized` keyword locks a method or block to prevent thread interference and memory consistency errors.
+**Java 21:**
+* **Pattern Matching for `switch`:** Switching over object types natively.
+* **Virtual Threads:** Lightweight threads managed by the JVM (Project Loom), allowing millions of concurrent threads without OS overhead.
