@@ -175,10 +175,44 @@ Standard collections (`ArrayList`, `HashMap`) are not thread-safe. Old legacy cl
 * **`ThreadLocal`:** Creates variables that can only be read and written by the same thread. Useful for keeping non-thread-safe objects (like `SimpleDateFormat`) safe without using locks.
 ---
 
-## 9. File I/O, NIO & Serialization
-* **`java.io`:** Stream-based, blocking I/O (`FileInputStream`, `BufferedReader`).
-* **`java.nio` (New I/O):** Channel and Buffer-based, non-blocking. Better for high-performance server applications.
-* **Serialization:** Converting an object to a byte stream (`implements Serializable`). `serialVersionUID` is crucial for version control during deserialization.
+## 9. File I/O, NIO & Serialization (0–2 Yrs Exp Focus)
+Understanding how Java interacts with files, networks, and object states is a core interview topic. 
+
+### 1. Traditional I/O (`java.io`)
+Traditional I/O is **Stream-based** and **Blocking**. A stream represents a continuous flow of data. If a thread reads from a stream and no data is available, the thread blocks (waits) until data arrives.
+
+
+
+Interviewers typically ask you to distinguish between the two main types of streams:
+* **Byte Streams (1-byte at a time):** Used for reading/writing raw binary data (e.g., images, PDFs, audio files).
+    * *Base Classes:* `InputStream`, `OutputStream`
+    * *Common Implementations:* `FileInputStream`, `FileOutputStream`
+* **Character Streams (2-bytes at a time):** Used for reading/writing text data. They automatically handle character encoding (like UTF-8).
+    * *Base Classes:* `Reader`, `Writer`
+    * *Common Implementations:* `FileReader`, `FileWriter`
+* **Buffered Streams (Crucial for Performance):** Reading one byte/character at a time directly from the disk is incredibly slow. `BufferedReader` and `BufferedInputStream` read large chunks of data into memory at once, drastically reducing expensive OS-level read operations.
+    * *Pro-tip:* Always wrap standard readers in buffered readers. (e.g., `BufferedReader br = new BufferedReader(new FileReader("file.txt"));`).
+
+### 2. New I/O (`java.nio` & NIO.2)
+Introduced to solve the performance bottlenecks of traditional I/O in high-load server environments.
+* **Core Differences:** While `java.io` reads data sequentially (Stream-oriented), `java.nio` reads chunks of data into memory blocks (Buffer-oriented) via two-way pathways called **Channels**. It supports **Non-blocking** operations.
+* **NIO.2 (`java.nio.file`):** This is what you will actually use day-to-day. Introduced in Java 7, it provides modern, simplified utility classes to handle file operations.
+    * **`Path` Interface:** The modern replacement for the old `java.io.File` class. (e.g., `Path path = Paths.get("config.txt");`).
+    * **`Files` Utility Class:** Contains static methods that make reading/writing files a one-liner, which interviewers love to see.
+        * *Example:* `List<String> lines = Files.readAllLines(Path.of("file.txt"));`
+
+### 3. Serialization & Deserialization
+A massive topic for junior-level interviews.
+
+
+
+* **Serialization:** The process of converting an object's state (its instance variables) into a byte stream so it can be saved to a database, written to a file, or sent over a network.
+* **Deserialization:** The reverse process of recreating the object in memory from the byte stream.
+* **How to implement:** A class must implement the `java.io.Serializable` interface. 
+    * *Note:* This is a **Marker Interface**—it has no methods to implement. It simply tells the JVM, "This object is allowed to be serialized."
+* **The `transient` Keyword:** If you have sensitive data (like a `password` field) or data that shouldn't be saved, mark it as `transient`. During serialization, the JVM will ignore it, and upon deserialization, it will be assigned its default value (e.g., `null` for objects, `0` for ints).
+* **`serialVersionUID`:** A unique version ID assigned to a Serializable class. 
+    * *Why it matters:* If you serialize a `User` object, save it to a file, and then later add a new field to the `User` class (changing its structure), the `serialVersionUID` changes. When you try to deserialize that old file, the JVM checks the IDs. Since they no longer match, it throws an `InvalidClassException`. Explicitly defining this ID prevents arbitrary breaking changes.
 
 ---
 
