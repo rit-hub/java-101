@@ -30,19 +30,49 @@ Strings are immutable in Java. For concatenation or manipulation in loops, use m
 ---
 
 ## 3. Object-Oriented Programming (OOP)
-Java revolves around objects.
+Java revolves around objects. For interviews, you must understand both the theoretical pillars and the practical keywords that enforce them.
 
-**The 4 Pillars:**
-1. **Encapsulation:** Wrapping data (variables) and code acting on data (methods) together. Using `private` fields with `public` getters/setters.
-2. **Inheritance:** `extends` (Classes) or `implements` (Interfaces) to reuse code. Java supports single inheritance for classes, multiple for interfaces.
-3. **Polymorphism:** 
-    * *Compile-time:* Method Overloading (same name, different parameters).
-    * *Run-time:* Method Overriding (subclass provides specific implementation of superclass method).
-4. **Abstraction:** Hiding implementation details via `abstract` classes or `interface`s.
+### A. The 4 Pillars of OOP
+1. **Encapsulation:** Wrapping data (variables) and code acting on data (methods) together as a single unit. 
+    * *How:* Using `private` fields with `public` getters/setters. Protects the internal state of an object.
+2. **Inheritance (IS-A Relationship):** Acquiring properties and behaviors of a parent class using `extends` (Classes) or `implements` (Interfaces) to promote code reusability. 
+    * *Rule:* Java supports *single inheritance* for classes (to avoid the Diamond Problem) but *multiple inheritance* for interfaces.
+3. **Polymorphism (One name, many forms):**
+    * **Compile-time (Static):** Method Overloading (same method name, different parameter types/count in the same class).
+    * **Run-time (Dynamic):** Method Overriding (subclass provides a specific implementation of a superclass method). The JVM decides which method to call at runtime based on the actual object type.
+4. **Abstraction:** Hiding complex implementation details and showing only the essential features to the user. Achieved via `abstract` classes or `interface`s.
 
-**Advanced OOP Constructs:**
-* **Enums:** Special classes representing a group of constants. Can have fields, methods, and constructors.
-* **Annotations:** Metadata tags (e.g., `@Override`, `@FunctionalInterface`, `@Deprecated`) used by the compiler or at runtime via Reflection.
+### B. Core Building Blocks & Keywords
+* **Constructors:** Special methods used to initialize objects. They have the same name as the class and no return type.
+    * *Types:* Default (provided by compiler if none exist) and Parameterized.
+    * *Constructor Chaining:* Calling one constructor from another using `this()` (same class) or `super()` (parent class). Must be the first line in the constructor.
+* **The `static` Keyword:** Belongs to the *class* rather than any specific *instance*. 
+    * *Variables:* Shared across all instances (memory efficient).
+    * *Methods:* Can be called without creating an object (e.g., `Math.max()`). Cannot access non-static members or `this`/`super`.
+    * *Blocks:* Executed once when the class is loaded into memory.
+* **The `final` Keyword:** Used to restrict modification.
+    * *Variable:* Becomes a constant; cannot be reassigned.
+    * *Method:* Cannot be overridden by subclasses.
+    * *Class:* Cannot be inherited (e.g., the `String` class is final).
+* **`this` vs. `super`:** * `this`: Refers to the current class instance.
+    * `super`: Refers to the immediate parent class instance (used to access parent methods/variables hidden by the subclass).
+
+### C. Interface vs. Abstract Class (Classic Interview Question)
+
+* **Abstract Class (`abstract`):** * Can have both abstract (unimplemented) and concrete (implemented) methods.
+    * Can have instance variables (state) and constructors.
+    * Use when classes share a core identity or fundamental behavior.
+* **Interface (`interface`):**
+    * Originally a contract with purely abstract methods. 
+    * *Java 8+ updates:* Interfaces can now have `default` methods (providing a default implementation) and `static` methods.
+    * Variables are implicitly `public static final` (constants).
+    * Use to define a capability or role (e.g., `Runnable`, `Serializable`) that can be applied to any class.
+
+### D. Advanced Concepts & Design Principles
+* **Composition (HAS-A Relationship):** Instead of inheriting from a class, you include an instance of it as a field. 
+    * *Principle:* "Favor Composition over Inheritance." It provides more flexibility and loose coupling. (e.g., A `Car` *has an* `Engine`, rather than a `Car` *is an* `Engine`).
+* **Enums:** Special classes representing a fixed group of constants (e.g., `DAYS_OF_WEEK`). Unlike basic constants, Enums can have fields, constructors, and methods.
+* **Annotations:** Metadata tags (`@Override`, `@FunctionalInterface`, `@Deprecated`) that provide instructions to the compiler or can be read at runtime via the Reflection API.
 
 ---
 
