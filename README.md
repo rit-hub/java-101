@@ -261,7 +261,28 @@ String names = employees.stream()
     .map(Employee::getName)                // Intermediate: Employee -> String (Method Reference)
     .collect(Collectors.joining(", "));    // Terminal: Join into a single String
 ```
+### `Collectors.groupingBy()` (Crucial for Interviews)
+This is used to group elements of a stream based on a specific property, similar to the `GROUP BY` clause in SQL. It returns a `Map` where the keys are the property you grouped by, and the values are lists of the items belonging to that group.
 
+**1. Basic Grouping:**
+*Scenario:* "Given a list of employees, group them by their department."
+```java
+// Returns a Map<String, List<Employee>>
+Map<String, List<Employee>> employeesByDept = employees.stream()
+    .collect(Collectors.groupingBy(Employee::getDepartment));
+```
+
+**2. Grouping with a Downstream Collector (Advanced):**
+You can pass a second collector to process the grouped items further.
+*Scenario:* "Given a list of employees, find the *count* of employees in each department."
+```java
+// Returns a Map<String, Long>
+Map<String, Long> countByDept = employees.stream()
+    .collect(Collectors.groupingBy(
+        Employee::getDepartment, 
+        Collectors.counting() // Downstream collector
+    ));
+```
 #### C. `Optional<T>`
 Introduced to prevent the dreaded `NullPointerException` (NPE). It acts as a container object which may or may not contain a non-null value.
 * **Creation:** `Optional.of(value)` (throws NPE if null), `Optional.ofNullable(value)` (safe), `Optional.empty()`.
