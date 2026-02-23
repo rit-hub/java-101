@@ -35,7 +35,8 @@ Java revolves around objects.
 **The 4 Pillars:**
 1. **Encapsulation:** Wrapping data (variables) and code acting on data (methods) together. Using `private` fields with `public` getters/setters.
 2. **Inheritance:** `extends` (Classes) or `implements` (Interfaces) to reuse code. Java supports single inheritance for classes, multiple for interfaces.
-3. **Polymorphism:** * *Compile-time:* Method Overloading (same name, different parameters).
+3. **Polymorphism:** 
+    * *Compile-time:* Method Overloading (same name, different parameters).
     * *Run-time:* Method Overriding (subclass provides specific implementation of superclass method).
 4. **Abstraction:** Hiding implementation details via `abstract` classes or `interface`s.
 
