@@ -134,19 +134,65 @@ Crucial for understanding how threads interact with memory.
 ---
 
 ## 8. Multithreading & Concurrency
-Moving from basic threads to advanced synchronization.
+Java provides robust, built-in support for concurrent execution. This ranges from basic thread management to advanced, lock-free data structures.
 
-**Basics:**
-* Implementing `Runnable` or extending `Thread`.
-* `synchronized` blocks/methods to prevent race conditions.
+### The Basics (Crucial for Freshers)
+* **Thread Lifecycle:** 1. **New:** Created but `start()` not yet called.
+  2. **Runnable:** Ready to run, waiting for CPU allocation.
+  3. **Running:** Executing the `run()` method.
+  4. **Blocked/Waiting:** Waiting for a lock (`Blocked`) or waiting indefinitely for another thread to signal (`Waiting` via `wait()`, `join()`).
+  5. **Terminated:** Execution completed or aborted.
+  
+  
 
-**Advanced (`java.util.concurrent`):**
-* **ExecutorService:** Thread pool management (e.g., `Executors.newFixedThreadPool(10)`).
-* **Callable & Future:** Like `Runnable`, but returns a result or throws an exception.
-* **Locks:** `ReentrantLock`, `ReadWriteLock` for finer control than `synchronized`.
-* **Synchronizers:** `CountDownLatch`, `CyclicBarrier` for orchestrating multiple threads.
-* **Concurrent Collections:** `ConcurrentHashMap` (lock stripping for high throughput), `CopyOnWriteArrayList`.
-* **Atomic Variables:** `AtomicInteger` (uses lock-free CAS - Compare-And-Swap operations).
+* **Creating Threads:**
+    * **`extends Thread`:** Tightly couples your code to the thread. Cannot extend any other class.
+    * **`implements Runnable`:** Preferred. Decouples the task from the thread execution mechanism and allows extending other classes.
+* **Intrinsic Locks (Monitors) & `synchronized`:** * Every Java object has an intrinsic lock. 
+    * **Method level:** `public synchronized void doWork()` locks the current instance (`this`). For `static` methods, it locks the `Class` object.
+    * **Block level:** `synchronized(this) { ... }` allows finer grain locking, improving performance by only locking critical sections.
+* **Inter-Thread Communication:** `wait()`, `notify()`, and `notifyAll()` must be called from within a `synchronized` context. They release the lock and allow threads to signal each other.
+
+### Advanced Concurrency: `java.util.concurrent` (Crucial for 2-5 Yrs Exp)
+Modern Java applications rarely manage raw `Thread` objects, relying instead on the high-level APIs introduced in Java 5 and beyond.
+
+#### 1. Executors & Thread Pools
+Creating raw threads is expensive (OS overhead, context switching). Thread pools reuse a fixed number of worker threads.
+
+
+
+* **`ExecutorService`:** The primary interface for thread pool management.
+    * `Executors.newFixedThreadPool(n)`: Fixed number of threads. Tasks queue up if all threads are busy.
+    * `Executors.newCachedThreadPool()`: Creates new threads as needed, reuses previously constructed ones. Good for many short-lived tasks.
+    * `Executors.newScheduledThreadPool(n)`: For periodic or delayed task execution.
+* **`Callable<T>` & `Future<T>`:** * `Runnable` cannot return a result or throw checked exceptions. `Callable` does both.
+    * `Future` represents the pending result of a `Callable`. `future.get()` blocks the calling thread until the result is available.
+* **`CompletableFuture` (Java 8+):** Enables building asynchronous, non-blocking pipelines without callback hell (e.g., `supplyAsync().thenApply().thenAccept()`).
+
+#### 2. Advanced Locking (`java.util.concurrent.locks`)
+More flexible than the implicit `synchronized` keyword.
+* **`ReentrantLock`:** Allows a thread to acquire the same lock multiple times. Features include:
+    * **Fairness:** Can be configured to grant locks to the longest-waiting thread (`new ReentrantLock(true)`).
+    * **`tryLock()`:** Attempts to acquire the lock immediately or within a timeout, avoiding deadlocks by not blocking indefinitely.
+* **`ReadWriteLock`:** Maintains a pair of locks. Multiple threads can read simultaneously (`ReadLock`), but only one thread can write (`WriteLock`). Excellent for read-heavy caches.
+
+#### 3. Synchronizers
+Utility classes to orchestrate the execution flow of multiple threads.
+* **`CountDownLatch`:** A thread waits until a set of operations being performed by other threads completes (counts down to zero). Cannot be reused.
+* **`CyclicBarrier`:** Makes a set of threads wait for each other to reach a common barrier point. Can be reused once the barrier is tripped.
+* **`Semaphore`:** Maintains a set of permits. Restricts the number of threads that can access a physical or logical resource (e.g., limiting database connections).
+
+#### 4. Concurrent Collections
+Thread-safe alternatives to standard collections, optimized for throughput.
+* **`ConcurrentHashMap`:** Does *not* lock the entire map. In Java 8+, it locks only the specific node (bucket) being updated using a mix of CAS operations and synchronized blocks. Extremely high read/write concurrency.
+* **`CopyOnWriteArrayList`:** Thread-safe variant of `ArrayList`. All mutative operations (`add`, `set`) are implemented by making a fresh copy of the underlying array. Highly efficient for read-heavy, write-rarely scenarios (like event listener lists).
+
+#### 5. Hardware-Level Thread Safety: CAS & Atomic Variables
+* **Compare-And-Swap (CAS):** An atomic instruction used in multithreading to achieve synchronization without using locks (lock-free). It compares the current value in memory with an expected value; if they match, it updates the memory to a new value.
+* **Atomic Classes (`AtomicInteger`, `AtomicReference`, `LongAdder`):** Wrappers around volatile variables that use CAS to perform thread-safe increments, decrements, and updates without the overhead of `synchronized` blocking.
+
+#### 6. `ThreadLocal`
+Provides thread-local variables. Each thread accessing the variable has its own, independently initialized copy. Often used to hold database connections, user sessions, or formatting objects (like `SimpleDateFormat`, which is not thread-safe).
 
 ---
 
